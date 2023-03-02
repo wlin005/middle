@@ -32,7 +32,7 @@ var counter = 0;
 
 function preload() {
   // Load the JPG image
-  img = loadImage('R.jpg');
+  img = loadImage('background.jpg');
 //load the font
    myFont = loadFont('Han.ttf')
 }
@@ -83,9 +83,9 @@ function gotPoses(poses) {
     y = y_new;
     x_new = poses[0].pose.rightWrist.x;
     y_new = poses[0].pose.rightWrist.y;
-    
+  } else {
+    havePoses = false;
   }
-
 }
 
 
@@ -103,7 +103,7 @@ function draw() {
     
     let newLetter = sen.charAt(counter);
    
-    stepSize = 10; // textWidth(newLetter);
+    stepSize = 50; // textWidth(newLetter);
 
     // Look at Shiffman Particle system, and either adapt that or just examine difference
     if (d > stepSize){ // condition if to add a letter
@@ -115,8 +115,8 @@ function draw() {
       }
       print('New letter')
       // add a new letter
-      let l = {x: x,
-               y: y,
+      let l = {x: x_new,
+               y: y_new,
                original_x: 20 , // put the right postion in with spacing
                //original_y: 45+counter*20,
                //original_y: 45,
@@ -144,39 +144,32 @@ function draw() {
   for (let i = 0; i < letters.length; i++) {
     let l = letters[i];
     //l.x += (l.original_x - l.x)*0.2;
+    l.original_y = yCount + 70;
     l.x = lerp(l.x, l.original_x+i*13, 0.05);
-    //l.y = lerp(l.y , l.original_y, 0.05);
-    l.y = yCount +70
+    l.y = lerp(l.y , l.original_y, 0.05);
+    //l.y = yCount +70
 
     yCount = rowNum * fontSizeMin;
-   if (yCount > height){ 
-   yCount = 0;
-   rowNum = 2;
-   colNum ++;
-  
-   }else{
-   rowNum = rowNum + 3;
+    if (yCount > height){ 
+      yCount = 0;
+      rowNum = 2;
+      colNum ++;
+    }else{
+      rowNum = rowNum + 3;
+    }
 
-   }
-
-   textAlign(CENTER, CENTER); // set text alignment to center
+    textAlign(CENTER, CENTER); // set text alignment to center
     textSize(l.size); // set text size 
-   fill(0, (i/letters.length)*255);
+    fill(0, (i/letters.length)*255);
     //l.x += l.vx*0.01;
     //l.y += l.vy*0.01;
     l.vx *= 0.9;
     l.vy *= 0.9;
-    
-
-
     noStroke();
     //for (let i = 0; i < sen.length; i++) {
-        text(l.char, l.x,l.y); // draw each text element
-        
- //}
-// split the graphics object into tiles!
-
-}
+        text(l.char, l.x,l.y); // draw each text element     
+    //}
+  }
 
 
 }
